@@ -21,16 +21,12 @@ jobs:
       - name: Extract Android project
         run: |
           unzip -q aether_launcher_github_ready.zip -d project
-          if [ -f project/settings.gradle.kts ]; then
-            echo "PROJECT_DIR=project" >> "$GITHUB_ENV"
-          else
-            PROJECT_FILE=$(find project -name settings.gradle.kts -print -quit)
-            if [ -z "$PROJECT_FILE" ]; then
-              echo "Could not find settings.gradle.kts"
-              exit 1
-            fi
-            echo "PROJECT_DIR=$(dirname "$PROJECT_FILE")" >> "$GITHUB_ENV"
+          PROJECT_FILE=$(find project -name settings.gradle.kts -print -quit)
+          if [ -z "$PROJECT_FILE" ]; then
+            echo "Could not find settings.gradle.kts"
+            exit 1
           fi
+          echo "PROJECT_DIR=$(dirname "$PROJECT_FILE")" >> "$GITHUB_ENV"
 
       - name: Set up Java
         uses: actions/setup-java@v5
@@ -45,7 +41,7 @@ jobs:
         run: |
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install \
             "platform-tools" \
-            "platforms;android-36-ext1" \
+            "platforms;android-36.1" \
             "build-tools;36.0.0"
 
       - name: Set up Gradle
